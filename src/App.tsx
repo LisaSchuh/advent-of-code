@@ -4,10 +4,10 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import { Day1 } from "./days/Day1";
 import { Day2 } from "./days/Day2";
-
+import React from "react";
+import { Day3 } from "./days/Day3";
 
 function App() {
-
   return (
     <>
       <div>
@@ -22,10 +22,9 @@ function App() {
       <div className="card">
         <Day1 />
         <Day2 />
+        <Day3 />
       </div>
-      <p className="read-the-docs">
-        old school code, for people over 30
-      </p>
+      <p className="read-the-docs">old school code, for people over 30</p>
     </>
   );
 }

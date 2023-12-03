@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { getNumber, reverseString } from "../utility";
+import React from "react";
 
 const DATA = `14gxqgqsqqbxfpxnbccjc33eight
 eight2sevenkl
