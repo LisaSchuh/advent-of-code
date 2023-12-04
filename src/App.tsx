@@ -6,6 +6,7 @@ import { Day1 } from "./days/Day1";
 import { Day2 } from "./days/Day2";
 import React from "react";
 import { Day3 } from "./days/Day3";
+import { Day4 } from "./days/Day4";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Day1 />
         <Day2 />
         <Day3 />
+        <Day4 />
       </div>
       <p className="read-the-docs">old school code, for people over 30</p>
     </>
