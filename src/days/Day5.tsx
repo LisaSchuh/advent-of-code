@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 
-
 // const SEED = `79 14 55 13`;
 // const SEED_TO_SOIL = `50 98 2
 // 52 50 48`;
@@ -25,7 +24,6 @@ import React, { useState } from "react";
 
 // const HUMIDITY_TO_LOCATION = `60 56 37
 // 56 93 4`;
-
 
 const SEED = `2906422699 6916147 3075226163 146720986 689152391 244427042 279234546 382175449 1105311711 2036236 3650753915 127044950 3994686181 93904335 1450749684 123906789 2044765513 620379445 1609835129 60050954`;
 const SEED_TO_SOIL = `2642418175 2192252668 3835256
@@ -280,66 +278,139 @@ const HUMIDITY_TO_LOCATION = `1568324830 3576584364 32633066
 1226208647 813718860 266854087
 570650779 7921916 19173702`;
 
-
 function extractMappingStringToKeyValue(input: string): any {
-    const seedInfo:any = {};
-    const soils = input.split("\n").map((row) => row.split(" ").map((col) => parseInt(col)));
-    soils.forEach((row, y) => {
-        if(row.length !== 3) throw new Error("Invalid input");
-        //set source seeds
-        for(let i = 0; i < row[2]; i++) {
-            seedInfo[row[1] + i] = row[0] + i;
-        }
-    });
-    return seedInfo;
-}
-
-function getValue(seed:number, map: any): number {
-    if(Object.keys(map).includes(seed.toString())) {
-        return map[seed];
+  const seedInfo: any = {};
+  const soils = input
+    .split("\n")
+    .map((row) => row.split(" ").map((col) => parseInt(col)));
+  soils.forEach((row, y) => {
+    if (row.length !== 3) throw new Error("Invalid input");
+    //set source seeds
+    for (let i = 0; i < row[2]; i++) {
+      seedInfo[row[1] + i] = row[0] + i;
     }
-    return seed;
+  });
+  return seedInfo;
 }
 
+function getValue(seed: number, map: any): number {
+  if (Object.keys(map).includes(seed.toString())) {
+    return map[seed];
+  }
+  return seed;
+}
+
+function getValueForMap(value: number, map: any): number {
+  const seedInfo: any = {};
+  const soils = map
+    .split("\n")
+    .map((row) => row.split(" ").map((col) => parseInt(col)));
+  const possibleNumbers = soils.map((row, y) => {
+    if (row.length !== 3) throw new Error("Invalid input");
+    if(row[1] <= value && (row[1] + (row[2] - 1)) >= value) {
+        return row[0] + (value - row[1]);
+    }
+    return 0;
+  }).filter((num) => {return num > 0});
+  if(possibleNumbers.length === 0) return value;
+  return possibleNumbers[0];
+}
 export const Day5 = () => {
-    const [part1, setPart1] = useState(0);
-    const [part2, setPart2] = useState(0);
+  const [part1, setPart1] = useState(0);
+  const [part2, setPart2] = useState(0);
 
-    const calculate = () => {
-        console.log("calculating soild");
-        const SeedtoSoilMap = extractMappingStringToKeyValue(SEED_TO_SOIL);
-        console.log("calculating fertilizer");
-        const SoilToFertilizerMap = extractMappingStringToKeyValue(SOIL_TO_FERTILIZER);
-        console.log("calculating water");
-        const FertilizerToWaterMap = extractMappingStringToKeyValue(FERTILIZER_TO_WATER);
-        console.log("calculating light");
-        const WaterToLightMap = extractMappingStringToKeyValue(WATER_TO_LIGHT);
-        console.log("calculating temperature");
-        const LightToTemperatureMap = extractMappingStringToKeyValue(LIGHT_TO_TEMPERATURE);
-        console.log("calculating humidity");
-        const TemperatureToHumidityMap = extractMappingStringToKeyValue(TEMPERATURE_TO_HUMIDITY);
-        console.log("calculating location");
-        const HumidityToLocationMap = extractMappingStringToKeyValue(HUMIDITY_TO_LOCATION);
-        const seeds = SEED.split(" ").map((seed) => parseInt(seed));
+  const calculateOutOfMemory = () => {
+    console.log("calculating soild");
+    const SeedtoSoilMap = extractMappingStringToKeyValue(SEED_TO_SOIL);
+    console.log("calculating fertilizer");
+    const SoilToFertilizerMap =
+      extractMappingStringToKeyValue(SOIL_TO_FERTILIZER);
+    console.log("calculating water");
+    const FertilizerToWaterMap =
+      extractMappingStringToKeyValue(FERTILIZER_TO_WATER);
+    console.log("calculating light");
+    const WaterToLightMap = extractMappingStringToKeyValue(WATER_TO_LIGHT);
+    console.log("calculating temperature");
+    const LightToTemperatureMap =
+      extractMappingStringToKeyValue(LIGHT_TO_TEMPERATURE);
+    console.log("calculating humidity");
+    const TemperatureToHumidityMap = extractMappingStringToKeyValue(
+      TEMPERATURE_TO_HUMIDITY
+    );
+    console.log("calculating location");
+    const HumidityToLocationMap =
+      extractMappingStringToKeyValue(HUMIDITY_TO_LOCATION);
+    const seeds = SEED.split(" ").map((seed) => parseInt(seed));
 
-        const locations = seeds.map((seed) => {
-            const soil = getValue(seed, SeedtoSoilMap);
-            const fertilizer = getValue(soil, SoilToFertilizerMap);
-            const water = getValue(fertilizer, FertilizerToWaterMap);
-            const light = getValue(water, WaterToLightMap);
-            const temperature = getValue(light, LightToTemperatureMap);
-            const humidity = getValue(temperature, TemperatureToHumidityMap);
-            const location = getValue(humidity, HumidityToLocationMap);
-            console.log(`location for seed ${seed} is ${location}`)
-            return location;
-        });
+    const locations = seeds.map((seed) => {
+      const soil = getValue(seed, SEED_TO_SOIL);
+      const fertilizer = getValue(soil, SOIL_TO_FERTILIZER);
+      const water = getValue(fertilizer, FERTILIZER_TO_WATER);
+      const light = getValue(water, WATER_TO_LIGHT);
+      const temperature = getValue(light, LIGHT_TO_TEMPERATURE);
+      const humidity = getValue(temperature, TEMPERATURE_TO_HUMIDITY);
+      const location = getValue(humidity, HUMIDITY_TO_LOCATION);
+      console.log(`location for seed ${seed} is ${location}`);
+      return location;
+    });
 
-        setPart1(Math.min(...locations));
-    }
-    return (<div>
-        <h2>Day 5</h2>
-        <button onClick={calculate}>Calculate part 1</button>
-        <p>Part 1: {part1}</p>
-        <p>Part 2: {part2}</p>
-    </div>);
-}
+    setPart1(Math.min(...locations));
+  };
+
+  const calculateSmart = () => {
+    const seeds = SEED.split(" ").map((seed) => parseInt(seed));
+
+    const locations = seeds.map((seed) => {
+      const soil = getValueForMap(seed, SEED_TO_SOIL);
+      console.log(`soil for seed ${seed} is ${soil}`);
+      const fertilizer = getValueForMap(soil, SOIL_TO_FERTILIZER);
+        console.log(`fertilizer for seed ${seed} is ${fertilizer}`);
+      const water = getValueForMap(fertilizer, FERTILIZER_TO_WATER);
+        console.log(`water for seed ${seed} is ${water}`);
+      const light = getValueForMap(water, WATER_TO_LIGHT);
+        console.log(`light for seed ${seed} is ${light}`);
+      const temperature = getValueForMap(light, LIGHT_TO_TEMPERATURE);
+        console.log(`temperature for seed ${seed} is ${temperature}`);
+      const humidity = getValueForMap(temperature, TEMPERATURE_TO_HUMIDITY);
+        console.log(`humidity for seed ${seed} is ${humidity}`);
+      const location = getValueForMap(humidity, HUMIDITY_TO_LOCATION);
+      console.log(`location for seed ${seed} is ${location}`);
+      return location;
+    });
+    setPart1(Math.min(...locations));
+  };
+
+  const calculateSmartPart2 = () => {
+    const seeds = SEED.split(" ").map((seed) => parseInt(seed));
+
+    let minLocation = -1;
+    seeds.forEach((seed, index) => {
+      if(index % 2 == 0) {
+        console.log(`calculating ragnge ${seeds[index]}(${index}) to ${seeds[index + 1]}(${index + 1})`)
+        for(let i = 0; i < seeds[index + 1]; i++) {
+            const soil = getValueForMap(seeds[index]+i, SEED_TO_SOIL);
+            const fertilizer = getValueForMap(soil, SOIL_TO_FERTILIZER);
+            const water = getValueForMap(fertilizer, FERTILIZER_TO_WATER);
+            const light = getValueForMap(water, WATER_TO_LIGHT);
+            const temperature = getValueForMap(light, LIGHT_TO_TEMPERATURE);
+            const humidity = getValueForMap(temperature, TEMPERATURE_TO_HUMIDITY);
+            const location = getValueForMap(humidity, HUMIDITY_TO_LOCATION);
+          //  console.log(`location for seed ${seeds[index]+i} is ${location}`);
+            minLocation = minLocation === - 1 ? location : Math.min(minLocation, location); 
+        }
+      }
+      
+    });
+    setPart1(minLocation);
+  };
+
+  return (
+    <div>
+      <h2>Day 5</h2>
+      <button onClick={calculateSmart}>Calculate part 1</button>
+      <p>Part 1: {part1}</p>
+      <button onClick={calculateSmartPart2}>Calculate part 2</button>
+      <p>Part 2: {part2}</p>
+    </div>
+  );
+};
