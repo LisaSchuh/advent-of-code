@@ -46,7 +46,7 @@ export const Day6 = () => {
 
   const calculatePart2 = () => {
     const numberOfWins = calculateMaxWins(DATA2);
-    setPart1(numberOfWins);
+    setPart2(numberOfWins);
   };
 
   return (
