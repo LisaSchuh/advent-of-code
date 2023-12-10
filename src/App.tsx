@@ -12,6 +12,7 @@ import { Day6 } from "./days/Day6";
 import { Day8 } from "./days/Day8";
 import { Day7 } from "./days/Day7";
 import { Day9 } from "./days/Day9";
+import { Day10 } from "./days/Day10";
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
       </div>
       <h1>Advent of Code</h1>
       <div className="card">
+        <Day10 />
         <Day9 />
         <Day8 />
         <Day7 />
