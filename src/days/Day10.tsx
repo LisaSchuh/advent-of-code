@@ -229,7 +229,7 @@ export const Day10 = () => {
   const [part2, setPart2] = useState<number>(0);
   const [mappinger, setMappinger] = useState<any>(null);
 
-  const map = DATA.split("\n").map((row) => row.split(""));
+  const map = DEMODATA2.split("\n").map((row) => row.split(""));
   let Scoordinates: Coordinate | null = null;
   map.forEach((row, y) => {
     row.forEach((col, x) => {
@@ -461,7 +461,6 @@ export const Day10 = () => {
         }
       });
     });
-    console.log(map);
 
     //if O touches ; or . or ' in right orientation to flow through turn to H or V
     changed = false;
@@ -471,18 +470,17 @@ export const Day10 = () => {
         row.forEach((col, x) => {
           if (col === "O" || col === "H") {
             const left = x - 1 >= 0 ? isWall(map[y][x - 1]) : false;
+            console.log("left", left)
             if (left) {
               const isFlowable = left ? map[y][x - 1].includes("d")|| map[y][x-1].includes("'") : false;
               map[y][x - 1] = isFlowable ? "H" : map[y][x - 1];
-              if (isFlowable) {
-                changed = isFlowable || changed;
-              }
+              changed = isFlowable || changed;
             }
 
             const right = map[y].length > x + 1 ? isWall(map[y][x + 1]) : false;
             if (right) {
               const isFlowableRight = right
-                ? map[y][x + 1].includes("d")|| map[y][x-1].includes("'")
+                ? map[y][x + 1].includes("d")|| map[y][x+1].includes("'")
                 : false;
               map[y][x + 1] = isFlowableRight ? "H" : map[y][x + 1];
               changed = isFlowableRight || changed;
@@ -514,6 +512,7 @@ export const Day10 = () => {
     //repeat mark all m touching o as o
     changed = false;
     do {
+      console.log("repeat mark all m touching o as o")
       changed = false;
       map.forEach((row, y) => {
         row.forEach((col, x) => {
@@ -544,7 +543,7 @@ export const Day10 = () => {
       });
     });
     setPart2(count);
-    console.log(map);
+    console.log("final", map);
     setMappinger(map);
   };
 
