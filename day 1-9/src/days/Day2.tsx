@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getNumber } from "../utility";
+import { getNumber } from "../utility.ts";
 import React from "react";
 
 const DATA2 = `Game 1: 1 red, 5 blue, 1 green; 16 blue, 3 red; 6 blue, 5 red; 4 red, 7 blue, 1 green

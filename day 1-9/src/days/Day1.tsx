@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getNumber, reverseString } from "../utility";
+import { getNumber, reverseString } from "../utility.ts";
 import React from "react";
 
 const DATA = `14gxqgqsqqbxfpxnbccjc33eight
